@@ -22,6 +22,7 @@ from .prompt import prompt_for_config
 from .generate import generate_context, generate_files
 from .vcs import clone
 from .replay import dump, load
+from .buildit import build_project
 
 logger = logging.getLogger(__name__)
 
@@ -67,8 +68,6 @@ def expand_abbreviations(template, config_dict):
 
     return template
 
-def build_project(repo_dir):
-    print(repo_dir)
 
 def cookiecutter(
         template, checkout=None, no_input=False, extra_context=None,

@@ -114,3 +114,17 @@ class RepositoryNotFound(CookiecutterException):
     """
     Raised when the specified cookiecutter repository doesn't exist.
     """
+
+class MissingBuildFileException(CookiecutterException):
+    """
+    Raised when a project's base dir does not contain a
+    build.yml file;
+    """
+
+class MissingBuildFileParamException(CookiecutterException):
+
+    def __init__(self, message):
+        self.message = message
+
+    def __str__(self):
+        return self.message
