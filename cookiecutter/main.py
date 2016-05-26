@@ -67,11 +67,13 @@ def expand_abbreviations(template, config_dict):
 
     return template
 
+def build_project(repo_dir):
+    print(repo_dir)
 
 def cookiecutter(
         template, checkout=None, no_input=False, extra_context=None,
         replay=False, overwrite_if_exists=False, output_dir='.',
-        config_file=USER_CONFIG_PATH):
+        config_file=USER_CONFIG_PATH, build=False):
     """
     API equivalent to using Cookiecutter at the command line.
 
@@ -100,10 +102,11 @@ def cookiecutter(
     template = expand_abbreviations(template, config_dict)
 
     if is_repo_url(template):
+        cookiecutter_dir = '.' if build else config_dict['cookiecutters_dir']
         repo_dir = clone(
             repo_url=template,
             checkout=checkout,
-            clone_to_dir=config_dict['cookiecutters_dir'],
+            clone_to_dir=cookiecutter_dir,
             no_input=no_input
         )
     else:
@@ -119,10 +122,18 @@ def cookiecutter(
     template_name = os.path.basename(template)
 
     if replay:
+        if build:
+            build_project(repo_dir)
+            return None
+
         context = load(config_dict['replay_dir'], template_name)
     else:
         context_file = os.path.join(repo_dir, 'cookiecutter.json')
         logging.debug('context_file is {0}'.format(context_file))
+
+        if build:
+            build_project(repo_dir)
+            return None
 
         context = generate_context(
             context_file=context_file,
