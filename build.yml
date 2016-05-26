@@ -1,0 +1,17 @@
+---
+virtualenv:
+    name: "shoutoutsvenv"
+
+requirements:
+    file: "requirements/dev.txt"
+
+collectstatic: true
+
+npm: true
+
+bower: true
+
+gulp: true
+
+apache_config:
+    server_path: "shoutouts"
