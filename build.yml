@@ -15,3 +15,11 @@ gulp: true
 
 apache_config:
     server_path: "shoutouts"
+
+arbitrary_command:
+    - "python"
+    - "--version"
+
+another_command:
+    - "ls"
+    - "/vagrant"
