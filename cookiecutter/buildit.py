@@ -126,16 +126,19 @@ def build_gulp(data, **kwargs):
 
 
 def build_apache_config(data, **kwargs):
-    if not data.get('server_path', None):
-        raise MissingBuildFileParamException("server_path must be specified under apache_config in the build.yml file")
+    if not data.get('hosted_location', None):
+        raise MissingBuildFileParamException("hosted_location must be specified under apache_config in the build.yml file")
 
-    server_path = data.get('server_path')
+    hosted_location = data.pop('hosted_location')
+
+    data_to_list = ['--{0},{1}'.format(k,v).split(',') for k,v in data.items()]
+    remaining_params = [item for sublist in data_to_list for item in sublist]
 
     print("\033[93mCreating apache conf...\033[0m", end='')
     sys.stdout.flush()
 
     s = subprocess.Popen(['python', '/home/vagrant/django-deployment-script-jenkins/create_httpd_conf.py',
-                          server_path, '--path_to_venv', '{0}/{1}'.format(VENV_DIR, kwargs['venv'])])
+                          hosted_location, '--path_to_venv', '{0}/{1}'.format(VENV_DIR, kwargs['venv'])]  + remaining_params)
     s.communicate()
     print("\033[92mFinished\033[0m")
 
