@@ -12,6 +12,7 @@ import yaml
 VENV_WRAPPER_PATH = os.environ['VIRTUALENVWRAPPER_SCRIPT']
 VENV_DIR = os.environ['VIRTUALENVWRAPPER_HOOK_DIR']
 
+
 def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
     class OrderedLoader(Loader):
         pass
@@ -22,6 +23,7 @@ def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
         yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
         construct_mapping)
     return yaml.load(stream, OrderedLoader)
+
 
 def build_project(repo_dir):
     build_file_path = find_build_file(repo_dir)
