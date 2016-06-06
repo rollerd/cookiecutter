@@ -54,7 +54,7 @@ def build_virtualenv(venv_data):
         venv_name = venv_data['name']
     except KeyError as err:
         msg = "Missing 'name' param for virtualenv in build.yml config"
-        raise MissingBuildFileParamException(msg, err)
+        raise MissingBuildFileParamException(msg)
 
     print("\033[93mCreating virtualenv...\033[0m")
     sys.stdout.flush()
@@ -65,15 +65,14 @@ def build_virtualenv(venv_data):
 
 def build_requirements(data, repo_dir=None, venv_name=None):
     if not venv_name:
-        err = "Missing venv name"
         msg = "Cannot install requirements without specifying a virtualenv in the build.yml config"
-        raise MissingBuildFileParamException(msg, err)
+        raise MissingBuildFileParamException(msg)
 
     try:
         req_file_path = data['file']
     except KeyError as err:
         msg = "Missing 'file' param under requirements in build.yml"
-        raise MissingBuildFileParamException(msg, err)
+        raise MissingBuildFileParamException(msg)
 
     with work_in(repo_dir):
         print("\033[93mInstalling project requirements...\033[0m", end='')
@@ -88,9 +87,8 @@ def build_collectstatic(data, repo_dir=None, venv_name=None):
         return
 
     if not venv_name:
-        err = "Missing venv name"
         msg = "Cannot call collectstatic without specifying a virtualenv in the build.yml config"
-        raise MissingBuildFileParamException(msg, err)
+        raise MissingBuildFileParamException(msg)
 
     with work_in(repo_dir):
         print("\033[93mRunning collectstatic...\033[0m", end='')
@@ -118,10 +116,13 @@ def build_bower(data, repo_dir=None, venv_name=None):
 
     print("\033[93mRunning bower install...\033[0m")
 
-    with work_in(repo_dir):
-        s = subprocess.Popen(['./node_modules/bower/bin/bower', 'install'])
-        s.communicate()
-        print("\033[92mFinished\033[0m")
+    try:
+        with work_in(repo_dir):
+            s = subprocess.Popen(['./node_modules/bower/bin/bower', 'install'])
+            s.communicate()
+            print("\033[92mFinished\033[0m")
+    except FileNotFoundError as err:
+        raise MissingBuildFileParamException("Could not find bower binary. Is npm set to 'true' in build.yml?")
 
 
 def build_gulp(data, repo_dir=None, venv_name=None):
@@ -130,10 +131,13 @@ def build_gulp(data, repo_dir=None, venv_name=None):
 
     print("\033[93mRunning gulp build...\033[0m")
 
-    with work_in(repo_dir):
-        s = subprocess.Popen(['./node_modules/gulp/bin/gulp.js', 'build'])
-        s.communicate()
-        print("\033[92mFinished\033[0m")
+    try:
+        with work_in(repo_dir):
+            s = subprocess.Popen(['./node_modules/gulp/bin/gulp.js', 'build'])
+            s.communicate()
+            print("\033[92mFinished\033[0m")
+    except FileNotFoundError as err:
+        raise MissingBuildFileParamException("Could not find gulp binary. Is npm set to 'true' in build.yml?")
 
 
 def build_apache_config(data, repo_dir=None, venv_name=None):
@@ -141,12 +145,11 @@ def build_apache_config(data, repo_dir=None, venv_name=None):
         hosted_location = data.pop('hosted_location')
     except KeyError as err:
         msg = "hosted_location must be specified under apache_config in the build.yml file"
-        raise MissingBuildFileParamException(msg, err)
+        raise MissingBuildFileParamException(msg)
 
     if not venv_name:
-        err = "Missing venv name"
         msg = "Cannot call apache_config builder without specifying a virtualenv in the build.yml config"
-        raise MissingBuildFileParamException(msg, err)
+        raise MissingBuildFileParamException(msg)
 
     data_to_list = ['--{0},{1}'.format(k,v).split(',') for k,v in data.items()]
     remaining_params = [item for sublist in data_to_list for item in sublist]

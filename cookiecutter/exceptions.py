@@ -123,12 +123,10 @@ class MissingBuildFileException(CookiecutterException):
 
 class MissingBuildFileParamException(CookiecutterException):
 
-    def __init__(self, message, error):
+    def __init__(self, message):
         self.message = message
-        self.error = error
 
     def __str__(self):
         return (
             "{self.message}. "
-            "Error message: {self.error}. "
         ).format(**locals())
