@@ -98,7 +98,7 @@ def build_collectstatic(data, repo_dir=None, venv_name=None):
         print("\033[92mFinished\033[0m")
 
 
-def build_npm(data, repo_dir=None, venv_name=None):
+def build_npm(data, repo_dir=None, **kwargs):
     if not data:
         return
 
@@ -110,7 +110,7 @@ def build_npm(data, repo_dir=None, venv_name=None):
         print("\033[92mFinished\033[0m")
 
 
-def build_bower(data, repo_dir=None, venv_name=None):
+def build_bower(data, repo_dir=None, **kwargs):
     if not data:
         return
 
@@ -125,7 +125,7 @@ def build_bower(data, repo_dir=None, venv_name=None):
         raise MissingBuildFileParamException("Could not find bower binary. Is npm set to 'true' in build.yml?")
 
 
-def build_gulp(data, repo_dir=None, venv_name=None):
+def build_gulp(data, repo_dir=None, **kwargs):
     if not data:
         return
 
@@ -140,7 +140,7 @@ def build_gulp(data, repo_dir=None, venv_name=None):
         raise MissingBuildFileParamException("Could not find gulp binary. Is npm set to 'true' in build.yml?")
 
 
-def build_apache_config(data, repo_dir=None, venv_name=None):
+def build_apache_config(data, venv_name=None, **kwargs):
     try:
         hosted_location = data.pop('hosted_location')
     except KeyError as err:
@@ -163,7 +163,7 @@ def build_apache_config(data, repo_dir=None, venv_name=None):
     print("\033[92mFinished\033[0m")
 
 
-def build_arbitrary(data, repo_dir=None, venv_name=None):
+def build_arbitrary(data, repo_dir=None, **kwargs):
     print("\033[93mRunning arbitrary command...\033[0m")
     sys.stdout.flush()
 
