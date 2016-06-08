@@ -167,8 +167,10 @@ def build_arbitrary(data, repo_dir=None, venv_name=None):
     print("\033[93mRunning arbitrary command...\033[0m")
     sys.stdout.flush()
 
+    options = data['options']
+
     with work_in(repo_dir):
-        s = subprocess.Popen(data)
+        s = subprocess.Popen(data['command'], **options)
         s.communicate()
 
     print("\033[92mFinished\033[0m")
